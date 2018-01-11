@@ -7,19 +7,14 @@
 
                     <div class="panel-body">
 
-                        <form>
                             <legend>Upload form</legend>
 
                             <div class="form-group">
                                 <label>Upload Files</label>
-                                <input type="file" multiple class="form-control">
+                                <input type="file"  class="form-control" @change="fileChange">
                             </div>
 
-
-
-
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
+                            <button @click.stop="uploadFile" class="btn btn-primary">Submit</button>
 
                     </div>
                 </div>
@@ -30,8 +25,38 @@
 
 <script>
     export default {
+        data(){
+            return{
+
+                attachment:null,
+                data:new FormData()
+            }
+         
+        },
+        methods:{
+            fileChange(e){
+                this.attachment = e.target.files[0];
+
+            },
+            uploadFile(){
+
+                this.data.append('file',this.attachment);
+
+
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+                axios.post('/upload',this.data,config)
+                    .then((response)=>{
+                    console.log(response);
+                })
+                    .catch(error=>{
+                        console.log(error);
+                    })
+                ;
+            }
+        },
         mounted() {
-            console.log('Component mounted.')
+
         }
     }
 </script>

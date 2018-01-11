@@ -42960,16 +42960,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
-    }
+    data: function data() {
+        return {
+
+            attachment: null,
+            data: new FormData()
+        };
+    },
+
+    methods: {
+        fileChange: function fileChange(e) {
+            this.attachment = e.target.files[0];
+        },
+        uploadFile: function uploadFile() {
+
+            this.data.append('file', this.attachment);
+
+            var config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+            axios.post('/upload', this.data, config).then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    },
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -42980,47 +42998,47 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-          _c("div", { staticClass: "panel panel-default" }, [
-            _c("div", { staticClass: "panel-heading" }, [
-              _vm._v("VUe Example Component")
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }, [
+            _vm._v("VUe Example Component")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("legend", [_vm._v("Upload form")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", [_vm._v("Upload Files")]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: { type: "file" },
+                on: { change: _vm.fileChange }
+              })
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "panel-body" }, [
-              _c("form", [
-                _c("legend", [_vm._v("Upload form")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", [_vm._v("Upload Files")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    staticClass: "form-control",
-                    attrs: { type: "file", multiple: "" }
-                  })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-                  [_vm._v("Submit")]
-                )
-              ])
-            ])
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                on: {
+                  click: function($event) {
+                    $event.stopPropagation()
+                    _vm.uploadFile($event)
+                  }
+                }
+              },
+              [_vm._v("Submit")]
+            )
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

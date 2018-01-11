@@ -11,8 +11,17 @@
 |
 */
 
+use Illuminate\Http\Request;
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::post('/upload', function (Request $request) {
+    $uploadedFile=$request->file;
+
+    return response(['status'=>$uploadedFile->extension()]);
+
 });
 
 Auth::routes();
