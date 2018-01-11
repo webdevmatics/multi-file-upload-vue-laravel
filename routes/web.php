@@ -17,13 +17,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/upload', function (Request $request) {
-    $uploadedFile=$request->file;
-
-    return response(['status'=>$uploadedFile->extension()]);
-
-});
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post('/upload',function(Request $request){
+
+    $uploadedFiles=$request->pics;
+
+    foreach ($uploadedFiles as $file){
+        $file->store('dummy');
+
+    }
+    return response(['status'=>'success'],200);
+
+});

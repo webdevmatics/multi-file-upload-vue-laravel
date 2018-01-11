@@ -42960,34 +42960,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-
-            attachment: null,
-            data: new FormData()
+            attachments: [],
+            form: new FormData()
         };
     },
 
+
     methods: {
-        fileChange: function fileChange(e) {
-            this.attachment = e.target.files[0];
+        fieldChange: function fieldChange(e) {
+            var selectedFiles = e.target.files;
+
+            if (!selectedFiles.length) {
+                return false;
+            }
+
+            for (var i = 0; i < selectedFiles.length; i++) {
+
+                this.attachments.push(selectedFiles[i]);
+            }
+
+            console.log(this.attachments);
         },
         uploadFile: function uploadFile() {
+            for (var i = 0; i < this.attachments.length; i++) {
 
-            this.data.append('file', this.attachment);
+                this.form.append('pics[]', this.attachments[i]);
+            }
 
             var config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            document.getElementById('upload-file').value = [];
 
-            axios.post('/upload', this.data, config).then(function (response) {
+            axios.post('/upload', this.form, config).then(function (response) {
+                //success
                 console.log(response);
-            }).catch(function (error) {
-                console.log(error);
+            }).catch(function (response) {
+                //error
             });
         }
     },
-    mounted: function mounted() {}
+    mounted: function mounted() {
+        console.log('Component mounted.');
+    }
 });
 
 /***/ }),
@@ -43014,22 +43033,14 @@ var render = function() {
               _vm._v(" "),
               _c("input", {
                 staticClass: "form-control",
-                attrs: { type: "file" },
-                on: { change: _vm.fileChange }
+                attrs: { id: "upload-file", type: "file", multiple: "" },
+                on: { change: _vm.fieldChange }
               })
             ]),
             _vm._v(" "),
             _c(
               "button",
-              {
-                staticClass: "btn btn-primary",
-                on: {
-                  click: function($event) {
-                    $event.stopPropagation()
-                    _vm.uploadFile($event)
-                  }
-                }
-              },
+              { staticClass: "btn btn-primary", on: { click: _vm.uploadFile } },
               [_vm._v("Submit")]
             )
           ])

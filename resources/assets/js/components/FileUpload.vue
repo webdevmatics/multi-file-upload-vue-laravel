@@ -6,15 +6,17 @@
                     <div class="panel-heading">VUe Example Component</div>
 
                     <div class="panel-body">
-
                             <legend>Upload form</legend>
 
                             <div class="form-group">
                                 <label>Upload Files</label>
-                                <input type="file"  class="form-control" @change="fileChange">
+                                <input id="upload-file" type="file" multiple class="form-control" @change="fieldChange">
                             </div>
 
-                            <button @click.stop="uploadFile" class="btn btn-primary">Submit</button>
+
+
+
+                            <button class="btn btn-primary" @click="uploadFile">Submit</button>
 
                     </div>
                 </div>
@@ -26,37 +28,52 @@
 <script>
     export default {
         data(){
-            return{
-
-                attachment:null,
-                data:new FormData()
-            }
-         
+          return {
+              attachments:[],
+              form: new FormData
+          }
         },
+
         methods:{
-            fileChange(e){
-                this.attachment = e.target.files[0];
+            fieldChange(e){
+                let selectedFiles=e.target.files;
+
+                if(!selectedFiles.length){
+                    return false;
+                }
+
+                for(let i=0;i<selectedFiles.length;i++){
+
+                    this.attachments.push(selectedFiles[i]);
+                }
+
+
+
+                console.log(this.attachments);
+
 
             },
             uploadFile(){
+                for(let i=0; i<this.attachments.length;i++){
 
-                this.data.append('file',this.attachment);
-
+                    this.form.append('pics[]',this.attachments[i]);
+                }
 
                 const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+                document.getElementById('upload-file').value=[];
 
-                axios.post('/upload',this.data,config)
-                    .then((response)=>{
+                axios.post('/upload',this.form,config).then(response=>{
+                    //success
                     console.log(response);
                 })
-                    .catch(error=>{
-                        console.log(error);
-                    })
-                ;
+                    .catch(response=>{
+                        //error
+                    });
+
             }
         },
         mounted() {
-
+            console.log('Component mounted.')
         }
     }
 </script>
